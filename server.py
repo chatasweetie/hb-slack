@@ -21,15 +21,16 @@ def index():
 
 # route for queuing students
 @app.route("/queue", methods=["POST"])
-def index():
+def enqueues():
     """Enqueues Students to Help Queue"""
 
-    # text = request.args.get("text")
-    # user_name = request.args.get("user_name")
-    # team_id
-    # token
-    # channel_id
-
+    token = request.args.get("token")
+    channel_id = request.args.get("channel_id")
+    user_id = request.args.get("user_id")
+    user_name = request.args.get("user_name")
+    text = request.args.get("text")
+    response_url = request.args.get("response_url")
+    
 
 
     # JSON needs:
@@ -63,6 +64,27 @@ def index():
 
 
 
+
+
+
+
+###########################################################################################
+# route for queue opening
+
+
+
+
+
+
+###########################################################################################
+# route for queue closing
+
+
+
+
+
+###########################################################################################
+# route for messaging students if they haven't been in the queue in x time
 
 
 
