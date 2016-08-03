@@ -13,6 +13,7 @@ class Channel(db.Model):
 
     channel_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     cohort_name = db.Column(db.String(100), nullable=False)
+    slack_token = db.Column(db.String(500), nullable=False)
 
     def __repr__(self):
         """Provides useful represenation when printed"""
@@ -41,10 +42,11 @@ class Request(db.Model):
 
     request_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     start_time_stamp = db.Column(db.DateTime, nullable=False)
+    text = db.Column(db.String(5000), nullable=False)
     end_time_stamp = db.Column(db.DateTime, nullable=True)
 
     student_id = db.Column(db.Integer,
-                            db.ForeignKey("student.student_id"),
+                            db.ForeignKey("students.student_id"),
                             nullable=False)
 
     staff_id = db.Column(db.Integer,
@@ -52,8 +54,12 @@ class Request(db.Model):
                             nullable=True)
 
     channel_id = db.Column(db.Integer,
-                            db.ForeignKey("channel.channel_id"),
+                            db.ForeignKey("channels.channel_id"),
                             nullable=True)
+
+    student = db.relationship("Student", backref="request")
+    staff = db.relationship("Staff", backref="request")
+    channel = db.relationship("Channel", backref="request")
 
     def __repr__(self):
         """Provides useful represenation when printed"""
@@ -62,6 +68,22 @@ class Request(db.Model):
                     staff: {}>""".format(self.request_id,
                                         self.student_id.student_name,
                                         self.staff_id.staff_name)
+
+    @classmethod
+    def adds_to_db(cls, student_id, text, channel_id):
+        """adds a student's request to queue"""
+
+        request = Request(
+                            start_time_stamp=datetime.datetime.now(),
+                            text=text,
+                            student_id=student_id,
+                            channel_id=channel_id,
+                        )
+
+        db.session.add(request)
+        db.session.commit()
+
+
 
 
 class Staff(db.Model):
@@ -82,7 +104,7 @@ class Staff(db.Model):
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgresql:///ridemindertest")
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "postgresql:///hb-slack")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     db.app = app
     db.init_app(app)
