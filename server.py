@@ -17,6 +17,69 @@ def index():
 
     return "Hello"
 
+# TODO:
+
+# route for queuing students
+@app.route("/queue", methods=["POST"])
+def index():
+    """Enqueues Students to Help Queue"""
+
+    # text = request.args.get("text")
+    # user_name = request.args.get("user_name")
+    # team_id
+    # token
+    # channel_id
+
+
+
+    # JSON needs:
+    #     Your URL should respond with a HTTP 200 "OK" status code
+    #     example payload: 
+    #             {
+    #                 "text": "It's 80 degrees right now.",
+    #                 "attachments": [
+    #                     {
+    #                         "text":"Partly cloudy today and tomorrow"
+    #                     }
+    #                 ]
+    #             }
+    #     "Ephemeral" responses
+    #             {
+    #                 "response_type": "in_channel",
+    #                 "text": "It's 80 degrees right now.",
+    #                 "attachments": [
+    #                     {
+    #                         "text":"Partly cloudy today and tomorrow"
+    #                     }
+    #                 ]
+    #             }
+
+
+    # return "Hello"
+
+###########################################################################################
+# route for dequeuing students
+
+
+
+
+
+
+
+
+
+###########################################################################################
+# route for motivation
+# Sarah
+
+# for private messages:
+# By default, the response messages sent to commands will only be visible to the user that issued the command (we call these "ephemeral" messages).
+
+
+
+
+
+
 if __name__ == "__main__":
 
     app.debug = False
