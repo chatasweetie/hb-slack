@@ -11,3 +11,16 @@ def checks_if_room(text):
             return True
 
     return False
+
+
+def makes_queue_text(queue):
+    """makes a slack queue for response text"""
+
+    response_text = "QUEUE:["
+
+    for request in queue:
+        response_text += "<@{}>,".format(request.student_id)
+
+    response_text.join(']')
+
+    return response_text
