@@ -36,6 +36,13 @@ def enqueues():
     text = request.args.get("text").lower()
     response_url = request.args.get("response_url")
 
+    print "token", token
+    print "channel_id", channel_id
+    print "user_id", user_id
+    print "user_name", user_name
+    print "text", text
+    print "response_url", response_url
+
     response = {
             "response_type": "ephemeral",
     }
@@ -50,12 +57,13 @@ def enqueues():
     if not checks_if_room(text.split()):
         return "please submit your again, including your location"
 
-    Request.adds_to_db(student_id=student_id, text=text, channel_id=channel_id)
+    # Request.adds_to_db(student_id=student_id, text=text, channel_id=channel_id)
 
-    queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
+    # queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
 
     response["response_type"] = "in_channel"
-    response["text"] = makes_queue_text(queue)
+    # response["text"] = makes_queue_text(queue)
+    response["text"] = 'hi <{}>'.format(user_id)
 
     if len(queue) > 4:
         pass
