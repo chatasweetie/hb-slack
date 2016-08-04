@@ -29,12 +29,12 @@ def index():
 def enqueues():
     """Enqueues Students to Help Queue"""
 
-    token = request.args.get("access_token")
-    channel_id = request.args.get("channel_id")
-    user_id = request.args.get("user_id")
-    user_name = request.args.get("user_name")
-    text = request.args.get("text")
-    response_url = request.args.get("response_url")
+    token = request.form.get("access_token")
+    channel_id = request.form.get("channel_id")
+    user_id = request.form.get("user_id")
+    user_name = request.form.get("user_name")
+    text = request.form.get("text")
+    response_url = request.form.get("response_url")
 
     print "request", request
     print "dir", dir(request)
