@@ -2,7 +2,7 @@
 
 import os
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from data_process import checks_if_room, makes_queue_text
 from model import Request
@@ -69,7 +69,7 @@ def enqueues():
     #     pass
         # to poke staff on work day
 
-    return response
+    return jsonify(response)
 
 
 
