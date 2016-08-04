@@ -48,11 +48,11 @@ def enqueues():
                 }
 
     #todo: change to a list of possible tokens when we move to mult rooms
-    if token != TOKEN:
-        response["response_type"] = "ephemeral"
-        response["text"] = "sorry, your not in a regestered slack channel"
+    # if token != TOKEN:
+    #     response["response_type"] = "ephemeral"
+    #     response["text"] = "sorry, your not in a regestered slack channel"
 
-        return response
+    #     return response
 
     if not checks_if_room(text.split()):
         return "please submit your again, including your location"
@@ -63,13 +63,13 @@ def enqueues():
 
     response["response_type"] = "in_channel"
     # response["text"] = makes_queue_text(queue)
-    response["text"] = 'hi <{}>'.format(user_id)
+    response["text"] = 'hi <@{}>'.format(user_id)
 
-    if len(queue) > 4:
-        pass
+    # if len(queue) > 4:
+    #     pass
         # to poke staff on work day
 
-    return 'hello jessica'
+    return response
 
 
 
