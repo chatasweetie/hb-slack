@@ -2,7 +2,7 @@
 
 import os
 
-from flask import Flask
+from flask import Flask, request
 from flask_debugtoolbar import DebugToolbarExtension
 from data_process import checks_if_room, makes_queue_text
 from model import Request
@@ -25,7 +25,7 @@ def index():
 # TODO:
 
 # route for queuing students
-@app.route("/queue", methods=["POST"])
+@app.route("/queue", methods=["GET", "POST"])
 def enqueues():
     """Enqueues Students to Help Queue"""
 
