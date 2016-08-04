@@ -11,7 +11,7 @@ class Channel(db.Model):
 
     __tablename__ = "channels"
 
-    channel_id = db.Column(db.Integer, primary_key=True)
+    channel_id = db.Column(db.String(100), primary_key=True, nullable=False)
     cohort_name = db.Column(db.String(100), nullable=False)
     slack_token = db.Column(db.String(500), nullable=False)
 
@@ -21,21 +21,22 @@ class Channel(db.Model):
         return "<Channel cohort_name: {}>".format(self.cohort_name)
 
     @classmethod
-    def gets_channel(channel_id, team_domain):
+    def gets_channel(cls, channel_id, team_domain, slack_token):
         """returns channel"""
 
-        channel = Channel.query.filter(channel_id=channel_id).first()
+        channel = Channel.query.filter_by(channel_id=channel_id).first()
 
-        if not student:
-            student = Student(
+        if not channel:
+            channel = Channel(
                             channel_id=channel_id,
                             cohort_name=team_domain,
+                            slack_token=slack_token,
                         )
 
-            db.session.add(student)
+            db.session.add(channel)
             db.session.commit()
 
-        return student    
+        return channel
 
 
 class Student(db.Model):
@@ -43,7 +44,7 @@ class Student(db.Model):
 
     __tablename__ = "students"
 
-    student_id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.String(100), primary_key=True)
     student_name = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
@@ -52,10 +53,10 @@ class Student(db.Model):
         return """<Student student_name: {} >""".format(self.student_name)
 
     @classmethod
-    def gets_student(student_id, student_name):
+    def gets_student(cls, student_id, student_name):
         """returns student"""
 
-        student = Student.query.filter(student_id=student_id).first()
+        student = Student.query.filter_by(student_id=student_id).first()
 
         if not student:
             student = Student(
@@ -78,15 +79,15 @@ class Request(db.Model):
     text = db.Column(db.String(5000), nullable=False)
     end_time_stamp = db.Column(db.DateTime, nullable=True)
 
-    student_id = db.Column(db.Integer,
+    student_id = db.Column(db.String(100),
                             db.ForeignKey("students.student_id"),
                             nullable=False)
 
-    staff_id = db.Column(db.Integer,
+    staff_id = db.Column(db.String(100),
                             db.ForeignKey("staff.staff_id"),
                             nullable=True)
 
-    channel_id = db.Column(db.Integer,
+    channel_id = db.Column(db.String(100),
                             db.ForeignKey("channels.channel_id"),
                             nullable=True)
 
@@ -107,7 +108,7 @@ class Request(db.Model):
         """adds a student's request to queue"""
 
         request = Request(
-                            start_time_stamp=datetime.datetime.now(),
+                            start_time_stamp=datetime.now(),
                             text=text,
                             student_id=student_id,
                             channel_id=channel_id,
@@ -124,7 +125,7 @@ class Staff(db.Model):
 
     __tablename__ = "staff"
 
-    staff_id = db.Column(db.Integer, primary_key=True)
+    staff_id = db.Column(db.String(100), primary_key=True)
     staff_name = db.Column(db.String(100), nullable=False)
     work_day = db.Column(db.String(15), nullable=True)
 
@@ -147,7 +148,9 @@ if __name__ == "__main__":
     """will connect to the db"""
     import os
     os.system("dropdb hb-slack")
+    print "drop db hb-slack"
     os.system("createdb hb-slack")
+    print "create db hb-slack"
 
     from server import app
     connect_to_db(app)

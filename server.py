@@ -5,7 +5,7 @@ import os
 from flask import Flask, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from data_process import checks_if_room, makes_queue_text
-from model import Request, Student, Channel
+from model import Request, Student, Channel, connect_to_db
 
 app = Flask(__name__)
 
@@ -58,9 +58,9 @@ def enqueues():
 
         return "please submit your again, including your location"
 
-    student = Student.gets_student(user_id, user_name)
+    student = Student.gets_student(student_id=user_id, student_name=user_name)
 
-    channel = Channel.gets_channel(channel_id, team_domain)
+    channel = Channel.gets_channel(channel_id, team_domain, token)
 
     Request.adds_to_db(student_id=user_id, text=text, channel_id=channel_id)
 
@@ -135,6 +135,8 @@ def enqueues():
 if __name__ == "__main__":
 
     app.debug = False
+
+    connect_to_db(app)
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
