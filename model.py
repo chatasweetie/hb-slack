@@ -34,6 +34,22 @@ class Student(db.Model):
 
         return """<Student student_name: {} >""".format(self.student_name)
 
+    @classmethod
+    def gets_student(student_id, student_name):
+        """returns student"""
+
+        student = Student.query.filter(student_id=student_id).first()
+
+        if not student:
+            student = Student(
+                            student_id=student_id,
+                            student_name=student_name,
+                        )
+
+            db.session.add(student)
+            db.session.commit()
+
+        return student
 
 class Request(db.Model):
     """This is the individual request for notification"""

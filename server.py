@@ -44,26 +44,25 @@ def enqueues():
     print "response_url", response_url
 
     response = {
-                "response_type": "ephemeral",
+                "response_type": "in_channel",
                 }
 
     #todo: change to a list of possible tokens when we move to mult rooms
-    # if token != TOKEN:
-    #     response["response_type"] = "ephemeral"
-    #     response["text"] = "sorry, your not in a regestered slack channel"
+    if token != TOKEN:
 
-    #     return response
+        return "sorry, your not in a regestered slack channel"
 
     if not checks_if_room(text.split()):
+
         return "please submit your again, including your location"
 
-    # Request.adds_to_db(student_id=student_id, text=text, channel_id=channel_id)
+    student = Student.gets_student(user_id, user_name)
 
-    # queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
+    Request.adds_to_db(student_id=user_id, text=text, channel_id=channel_id)
 
-    response["response_type"] = "in_channel"
-    # response["text"] = makes_queue_text(queue)
-    response["text"] = 'hi <@{}>'.format(user_id)
+    queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
+
+    response["text"] = makes_queue_text(queue)
 
     # if len(queue) > 4:
     #     pass
