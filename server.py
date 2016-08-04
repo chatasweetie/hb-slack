@@ -25,7 +25,7 @@ def index():
 # TODO:
 
 # route for queuing students
-@app.route("/queue", methods=["GET", "POST"])
+@app.route("/queue", methods=["POST"])
 def enqueues():
     """Enqueues Students to Help Queue"""
 
@@ -36,6 +36,7 @@ def enqueues():
     text = request.form.get("text")
     response_url = request.form.get("response_url")
     team_domain = request.form.get("team_domain")
+    team_id = request.form.get("team_id")
 
     print "token", token
     print "channel_id", channel_id
@@ -61,9 +62,9 @@ def enqueues():
 
     # student = Student.gets_student(student_id=user_id, student_name=user_name)
 
-    # channel = Channel.gets_channel(channel_id, team_domain, token)
+    # channel = Channel.gets_channel(team_id, team_domain, token)
 
-    Request.adds_to_db(student_id=user_id, text=text, channel_id=channel_id)
+    Request.adds_to_db(student_id=user_id, text=text, channel_id=team_id)
 
     queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
 
