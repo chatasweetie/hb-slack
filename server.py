@@ -4,7 +4,7 @@ import os
 
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
-from data_process import checks_if_room
+from data_process import checks_if_room, makes_queue_text
 from model import Request
 
 app = Flask(__name__)
@@ -29,60 +29,42 @@ def index():
 def enqueues():
     """Enqueues Students to Help Queue"""
 
-    token = request.args.get("token")
+    token = request.args.get("access_token")
     channel_id = request.args.get("channel_id")
     user_id = request.args.get("user_id")
     user_name = request.args.get("user_name")
     text = request.args.get("text").lower()
     response_url = request.args.get("response_url")
 
+    response = {
+            "response_type": "ephemeral",
+    }
+
+    #todo: change to a list of possible tokens when we move to mult rooms
     if token != TOKEN:
-        return "sorry, your not in a regestered slack channel"
+        response["response_type"] = "ephemeral"
+        response["text"] = "sorry, your not in a regestered slack channel"
+
+        return response
 
     if not checks_if_room(text.split()):
         return "please submit your again, including your location"
 
     Request.adds_to_db(student_id=student_id, text=text, channel_id=channel_id)
 
-    queue = Request.query.filter_by(end_time_stamp=None).order_by('start_time_stamp').all()
+    queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
+
+    response["response_type"] = "in_channel"
+    response["text"] = makes_queue_text(queue)
+
+    if len(queue) > 4:
+        pass
+        # to poke staff on work day
+
+    return response
 
 
 
-    return "I'm not done yet!"
-
-
-
-
-
-
-
-
-
-
-    # JSON needs:
-    #     Your URL should respond with a HTTP 200 "OK" status code
-    #     example payload: 
-    #             {
-    #                 "text": "It's 80 degrees right now.",
-    #                 "attachments": [
-    #                     {
-    #                         "text":"Partly cloudy today and tomorrow"
-    #                     }
-    #                 ]
-    #             }
-    #     "Ephemeral" responses
-    #             {
-    #                 "response_type": "in_channel",
-    #                 "text": "It's 80 degrees right now.",
-    #                 "attachments": [
-    #                     {
-    #                         "text":"Partly cloudy today and tomorrow"
-    #                     }
-    #                 ]
-    #             }
-
-
-    # return "Hello"
 
 ###########################################################################################
 # route for dequeuing students
