@@ -37,6 +37,8 @@ def enqueues():
     response_url = request.args.get("response_url")
 
     print "request", request
+    print "dir", dir(request)
+    print "__dict__", request.__dict__
 
     print "token", token
     print "channel_id", channel_id
@@ -45,33 +47,33 @@ def enqueues():
     print "text", text
     print "response_url", response_url
 
-    response = {
-            "response_type": "ephemeral",
-    }
+    # response = {
+    #         "response_type": "ephemeral",
+    # }
 
-    #todo: change to a list of possible tokens when we move to mult rooms
-    if token != TOKEN:
-        response["response_type"] = "ephemeral"
-        response["text"] = "sorry, your not in a regestered slack channel"
+    # #todo: change to a list of possible tokens when we move to mult rooms
+    # if token != TOKEN:
+    #     response["response_type"] = "ephemeral"
+    #     response["text"] = "sorry, your not in a regestered slack channel"
 
-        return response
+    #     return response
 
-    if not checks_if_room(text.split()):
-        return "please submit your again, including your location"
+    # if not checks_if_room(text.split()):
+    #     return "please submit your again, including your location"
 
-    # Request.adds_to_db(student_id=student_id, text=text, channel_id=channel_id)
+    # # Request.adds_to_db(student_id=student_id, text=text, channel_id=channel_id)
 
-    # queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
+    # # queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
 
-    response["response_type"] = "in_channel"
-    # response["text"] = makes_queue_text(queue)
-    response["text"] = 'hi <{}>'.format(user_id)
+    # response["response_type"] = "in_channel"
+    # # response["text"] = makes_queue_text(queue)
+    # response["text"] = 'hi <{}>'.format(user_id)
 
-    if len(queue) > 4:
-        pass
+    # if len(queue) > 4:
+    #     pass
         # to poke staff on work day
 
-    return response
+    return 'hello jessica'
 
 
 
