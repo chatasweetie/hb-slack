@@ -11,7 +11,7 @@ class Channel(db.Model):
 
     __tablename__ = "channels"
 
-    channel_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    channel_id = db.Column(db.Integer, primary_key=True)
     cohort_name = db.Column(db.String(100), nullable=False)
     slack_token = db.Column(db.String(500), nullable=False)
 
@@ -20,13 +20,30 @@ class Channel(db.Model):
 
         return "<Channel cohort_name: {}>".format(self.cohort_name)
 
+    @classmethod
+    def gets_channel(channel_id, team_domain):
+        """returns channel"""
+
+        channel = Channel.query.filter(channel_id=channel_id).first()
+
+        if not student:
+            student = Student(
+                            channel_id=channel_id,
+                            cohort_name=team_domain,
+                        )
+
+            db.session.add(student)
+            db.session.commit()
+
+        return student    
+
 
 class Student(db.Model):
     """This is an individual student"""
 
     __tablename__ = "students"
 
-    student_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    student_id = db.Column(db.Integer, primary_key=True)
     student_name = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
@@ -107,7 +124,7 @@ class Staff(db.Model):
 
     __tablename__ = "staff"
 
-    staff_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    staff_id = db.Column(db.Integer, primary_key=True)
     staff_name = db.Column(db.String(100), nullable=False)
     work_day = db.Column(db.String(15), nullable=True)
 

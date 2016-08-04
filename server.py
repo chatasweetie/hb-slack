@@ -35,6 +35,7 @@ def enqueues():
     user_name = request.form.get("user_name")
     text = request.form.get("text")
     response_url = request.form.get("response_url")
+    team_domain = request.form.get("team_domain")
 
     print "token", token
     print "channel_id", channel_id
@@ -42,6 +43,7 @@ def enqueues():
     print "user_name", user_name
     print "text", text
     print "response_url", response_url
+
 
     response = {
                 "response_type": "in_channel",
@@ -57,6 +59,8 @@ def enqueues():
         return "please submit your again, including your location"
 
     student = Student.gets_student(user_id, user_name)
+
+    channel = Channel.gets_channel(channel_id, team_domain)
 
     Request.adds_to_db(student_id=user_id, text=text, channel_id=channel_id)
 
