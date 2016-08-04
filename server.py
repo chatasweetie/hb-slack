@@ -48,9 +48,9 @@ def enqueues():
                 }
 
     #todo: change to a list of possible tokens when we move to mult rooms
-    if token != TOKEN:
+    # if token != TOKEN:
 
-        return "sorry, your not in a regestered slack channel"
+    #     return "sorry, your not in a regestered slack channel"
 
     if not checks_if_room(text.split()):
 
