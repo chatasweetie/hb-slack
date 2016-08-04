@@ -33,8 +33,10 @@ def enqueues():
     channel_id = request.args.get("channel_id")
     user_id = request.args.get("user_id")
     user_name = request.args.get("user_name")
-    text = request.args.get("text").lower()
+    text = request.args.get("text")
     response_url = request.args.get("response_url")
+
+    print "request", request
 
     print "token", token
     print "channel_id", channel_id
