@@ -13,7 +13,7 @@ class Channel(db.Model):
 
     channel_id = db.Column(db.String(100), primary_key=True, nullable=False)
     cohort_name = db.Column(db.String(100), nullable=False)
-    slack_token = db.Column(db.String(500), nullable=False)
+    slack_token = db.Column(db.String(500), nullable=True)
 
     def __repr__(self):
         """Provides useful represenation when printed"""

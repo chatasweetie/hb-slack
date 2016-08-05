@@ -4,7 +4,7 @@ import os
 
 from flask import Flask, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
-from data_process import checks_if_room, makes_queue_text
+from data_process import checks_if_room, makes_queue_text, pokes_staff
 from model import Request, Student, Channel, connect_to_db
 
 app = Flask(__name__)
@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("FLASK_SECRET_KEY", "abcdef")
 
 
-TOKEN = os.environ.get("TOKEN")
+TOKEN = os.environ.get("SEED_TOKEN")
 
 
 @app.route("/")
@@ -34,8 +34,6 @@ def enqueues():
     user_id = request.form.get("user_id")
     user_name = request.form.get("user_name")
     text = request.form.get("text")
-    response_url = request.form.get("response_url")
-    team_domain = request.form.get("team_domain")
     team_id = request.form.get("team_id")
 
     print "token", token
@@ -43,8 +41,6 @@ def enqueues():
     print "user_id", user_id
     print "user_name", user_name
     print "text", text
-    print "response_url", response_url
-    print "team_domain", team_domain
 
 
     response = {
@@ -58,11 +54,7 @@ def enqueues():
 
     if not checks_if_room(text.split()):
 
-        return "please submit your again, including your location"
-
-    # student = Student.gets_student(student_id=user_id, student_name=user_name)
-
-    # channel = Channel.gets_channel(team_id, team_domain, token)
+        return "'{}' is not valid, please submit your request again, including your location".format(text)
 
     Request.adds_to_db(student_id=user_id, text=text, channel_id=team_id)
 
@@ -70,9 +62,11 @@ def enqueues():
 
     response["text"] = makes_queue_text(queue)
 
-    # if len(queue) > 4:
-    #     pass
+    if len(queue) > 4:
         # to poke staff on work day
+        pokes_staff(TOKEN)
+
+
 
     return jsonify(response)
 
