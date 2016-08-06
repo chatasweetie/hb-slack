@@ -91,7 +91,7 @@ def dequeues():
                 "response_type": "in_channel",
                 }
 
-    response["text"] = "go to @{} -{}-. New:".formate(student_id, text, makes_queue_text(queue[1:]))
+    response["text"] = "go to @{} -{}-. New:{}".format(student_id, text, makes_queue_text(queue[1:]))
 
     return jsonify(response)
 
