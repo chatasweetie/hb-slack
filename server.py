@@ -6,6 +6,7 @@ from flask import Flask, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from data_process import checks_if_room, makes_queue_text, pokes_staff
 from model import Request, Student, Channel, connect_to_db
+from datetime import datetime
 
 app = Flask(__name__)
 
