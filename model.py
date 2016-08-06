@@ -118,7 +118,11 @@ class Request(db.Model):
         db.session.commit()
 
 
-
+def update_request(request):
+    """updates the request to be """
+    request.end_time_stamp = datetime.now()
+    db.session.add(request)
+    db.session.commit()
 
 class Staff(db.Model):
     """This is an individual education team member"""

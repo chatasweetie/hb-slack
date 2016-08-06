@@ -5,8 +5,7 @@ import os
 from flask import Flask, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from data_process import checks_if_room, makes_queue_text, pokes_staff
-from model import Request, Student, Channel, connect_to_db
-from datetime import datetime
+from model import Request, Student, Channel, connect_to_db, update_request
 
 app = Flask(__name__)
 
@@ -83,12 +82,10 @@ def dequeues():
 
     queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
 
-    queue[0].end_time_stamp = datetime.now()
     student_id = queue[0].student_id
     text = queue[0].text
 
-    db.session.add(request)
-    db.session.commit()
+    update_request(queue[0])
 
     response = {
                 "response_type": "in_channel",
