@@ -67,7 +67,6 @@ def enqueues():
         pokes_staff(TOKEN)
 
 
-
     return jsonify(response)
 
 
@@ -75,10 +74,31 @@ def enqueues():
 
 ###########################################################################################
 # route for dequeuing students
+@app.route("/dequeue", methods=["POST"])
+def enqueues():
+    """Dequeues Students to Help Queue"""
 
+    token = request.form.get("token")
+    channel_id = request.form.get("channel_id")
+    user_id = request.form.get("user_id")
+    user_name = request.form.get("user_name")
+    text = request.form.get("text")
+    team_id = request.form.get("team_id")
 
+    queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
 
+    queue[0].end_time_stamp = datetime.now()
+    student_id = queue[0].student_id
+    text = queue[0].text
 
+    db.session.add(request)
+    db.session.commit()
+
+    response = {
+                "response_type": "in_channel",
+                }
+
+    response["text"] = "go to @{} -{}-. New:".formate(student_id, text, makes_queue_text(queue[1:]))
 
 
 
