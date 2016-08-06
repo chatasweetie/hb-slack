@@ -1,6 +1,7 @@
 """Processes data for slack data"""
 import requests
 
+
 def checks_if_room(text):
     """Checks to if a request contains a location/room information"""
 

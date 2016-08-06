@@ -66,16 +66,11 @@ def enqueues():
         # to poke staff on work day
         pokes_staff(TOKEN)
 
-
     return jsonify(response)
 
 
-
-
-###########################################################################################
-# route for dequeuing students
 @app.route("/dequeue", methods=["POST"])
-def enqueues():
+def dequeues():
     """Dequeues Students to Help Queue"""
 
     token = request.form.get("token")
@@ -99,6 +94,8 @@ def enqueues():
                 }
 
     response["text"] = "go to @{} -{}-. New:".formate(student_id, text, makes_queue_text(queue[1:]))
+
+    return jsonify(response)
 
 
 
