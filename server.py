@@ -56,7 +56,7 @@ def enqueues():
 
         return "'{}' is not valid, please submit your request again, including your location".format(text)
 
-    Request.adds_to_db(student_id=user_id, text=text, channel_id=team_id)
+    Request.adds_to_db(student_slack_name=user_name, student_id=user_id, text=text, channel_id=team_id)
 
     queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
 
@@ -81,7 +81,7 @@ def dequeues():
     team_id = request.form.get("team_id")
 
     if text[0] == "@":
-        request = Request.query.filter(Request.student_slack_name=={}).first().format(text[1:])
+        request = Request.query.filter(Request.student_slack_name==user_name, Request.end_time_stamp.is_(None)).first()
         student_id = request.student_id
         text = request.text
         request.staff_id = user_id
@@ -101,7 +101,7 @@ def dequeues():
                 "response_type": "in_channel",
                 }
 
-    response["text"] = "go to <@{}> -{}-. New:{}".format(student_id, text, makes_queue_text(queue))
+    response["text"] = "go to <@{}> -{}-.           New:{}".format(student_id, text, makes_queue_text(queue))
 
     return jsonify(response)
 

@@ -79,8 +79,9 @@ class Request(db.Model):
     start_time_stamp = db.Column(db.DateTime, nullable=False)
     text = db.Column(db.String(5000), nullable=False)
     end_time_stamp = db.Column(db.DateTime, nullable=True)
+    student_slack_name = db.Column(db.String(100), nullable=False)
 
-    student_slack_name = db.Column(db.String(100),
+    student_id = db.Column(db.String(100),
                             db.ForeignKey("students.student_id"),
                             nullable=False)
 
@@ -105,13 +106,14 @@ class Request(db.Model):
                                         self.staff_id.staff_name)
 
     @classmethod
-    def adds_to_db(cls, student_id, text, channel_id):
+    def adds_to_db(cls, student_slack_name, student_id, text, channel_id):
         """adds a student's request to queue"""
 
         request = Request(
                             start_time_stamp=datetime.now(),
                             text=text,
                             student_id=student_id,
+                            student_slack_name=student_slack_name,
                             channel_id=channel_id,
                         )
 
