@@ -102,8 +102,8 @@ class Slack_Request(db.Model):
 
         return """<Slack_Request request_id: {} student: {}
                     staff: {}>""".format(self.slack_request_id,
-                                        self.student_id.student_name,
-                                        self.staff_id.staff_name)
+                                        self.student.student_name,
+                                        self.staff_id)
 
     @classmethod
     def adds_to_db(cls, student_slack_name, student_id, text, channel_id):
