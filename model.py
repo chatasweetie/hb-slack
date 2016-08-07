@@ -46,6 +46,7 @@ class Student(db.Model):
 
     student_id = db.Column(db.String(100), primary_key=True)
     student_name = db.Column(db.String(100), nullable=False)
+    student_slack_name = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
         """Provides useful represenation when printed"""
@@ -79,7 +80,7 @@ class Request(db.Model):
     text = db.Column(db.String(5000), nullable=False)
     end_time_stamp = db.Column(db.DateTime, nullable=True)
 
-    student_id = db.Column(db.String(100),
+    student_slack_name = db.Column(db.String(100),
                             db.ForeignKey("students.student_id"),
                             nullable=False)
 
@@ -91,9 +92,9 @@ class Request(db.Model):
                             db.ForeignKey("channels.channel_id"),
                             nullable=True)
 
-    student = db.relationship("Student", backref="request")
-    staff = db.relationship("Staff", backref="request")
-    channel = db.relationship("Channel", backref="request")
+    student = db.relationship("Student", backref="requests")
+    staff = db.relationship("Staff", backref="requests")
+    channel = db.relationship("Channel", backref="requests")
 
     def __repr__(self):
         """Provides useful represenation when printed"""
@@ -132,6 +133,7 @@ class Staff(db.Model):
     staff_id = db.Column(db.String(100), primary_key=True)
     staff_name = db.Column(db.String(100), nullable=False)
     work_day = db.Column(db.String(15), nullable=True)
+    staff_slack_name = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
         """Provides useful represenation when printed"""

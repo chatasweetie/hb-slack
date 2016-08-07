@@ -80,18 +80,28 @@ def dequeues():
     text = request.form.get("text")
     team_id = request.form.get("team_id")
 
-    queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
+    if text[0] == "@":
+        request = Request.query.filter(Request.student_slack_name=={}).first().format(text[1:])
+        student_id = request.student_id
+        text = request.text
+        request.staff_id = user_id
+        update_request(request)
 
-    student_id = queue[0].student_id
-    text = queue[0].text
+        queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
 
-    update_request(queue[0])
+    else:
+        queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
+        student_id = queue[0].student_id
+        text = queue[0].text
+        queue[0].staff_id = user_id
+        update_request(queue[0])
+        queue = queue[1:]
 
     response = {
                 "response_type": "in_channel",
                 }
 
-    response["text"] = "go to @{} -{}-. New:{}".format(student_id, text, makes_queue_text(queue[1:]))
+    response["text"] = "go to <@{}> -{}-. New:{}".format(student_id, text, makes_queue_text(queue))
 
     return jsonify(response)
 
