@@ -5,7 +5,7 @@ import os
 from flask import Flask, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from data_process import checks_if_room, makes_queue_text, pokes_staff
-from model import Request, Student, Channel, connect_to_db, update_request
+from model import Slack_Request, Student, Channel, connect_to_db, update_request
 
 app = Flask(__name__)
 
@@ -56,9 +56,9 @@ def enqueues():
 
         return "'{}' is not valid, please submit your request again, including your location".format(text)
 
-    Request.adds_to_db(student_slack_name=user_name, student_id=user_id, text=text, channel_id=team_id)
+    Slack_Request.adds_to_db(student_slack_name=user_name, student_id=user_id, text=text, channel_id=team_id)
 
-    queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
+    queue = Slack_Request.query.filter(Slack_Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
 
     response["text"] = makes_queue_text(queue)
 
@@ -80,17 +80,23 @@ def dequeues():
     text = request.form.get("text")
     team_id = request.form.get("team_id")
 
-    if text[0] == "@":
-        request = Request.query.filter(Request.student_slack_name==user_name, Request.end_time_stamp.is_(None)).first()
-        student_id = request.student_id
-        text = request.text
-        request.staff_id = user_id
-        update_request(request)
+    print "token", token
+    print "channel_id", channel_id
+    print "user_id", user_id
+    print "user_name", user_name
+    print "text", text
 
-        queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
+    if text[0] == "@":
+        slack_request = Slack_Request.query.filter(Slack_Request.student_slack_name==user_name, Slack_Request.end_time_stamp.is_(None)).first()
+        student_id = slack_request.student_id
+        text = slack_request.text
+        slack_request.staff_id = user_id
+        update_request(slack_request)
+
+        queue = Slack_Request.query.filter(Slack_Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
 
     else:
-        queue = Request.query.filter(Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
+        queue = Slack_Request.query.filter(Slack_Request.end_time_stamp.is_(None)).order_by('start_time_stamp').all()
         student_id = queue[0].student_id
         text = queue[0].text
         queue[0].staff_id = user_id

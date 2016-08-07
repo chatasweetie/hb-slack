@@ -70,12 +70,12 @@ class Student(db.Model):
 
         return student
 
-class Request(db.Model):
+class Slack_Request(db.Model):
     """This is the individual request for notification"""
 
-    __tablename__ = "requests"
+    __tablename__ = "slack_requests"
 
-    request_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    slack_request_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     start_time_stamp = db.Column(db.DateTime, nullable=False)
     text = db.Column(db.String(5000), nullable=False)
     end_time_stamp = db.Column(db.DateTime, nullable=True)
@@ -93,15 +93,15 @@ class Request(db.Model):
                             db.ForeignKey("channels.channel_id"),
                             nullable=True)
 
-    student = db.relationship("Student", backref="requests")
-    staff = db.relationship("Staff", backref="requests")
-    channel = db.relationship("Channel", backref="requests")
+    student = db.relationship("Student", backref="slack_requests")
+    staff = db.relationship("Staff", backref="slack_requests")
+    channel = db.relationship("Channel", backref="slack_requests")
 
     def __repr__(self):
         """Provides useful represenation when printed"""
 
-        return """<Request request_id: {} student: {}
-                    staff: {}>""".format(self.request_id,
+        return """<Slack_Request request_id: {} student: {}
+                    staff: {}>""".format(self.slack_request_id,
                                         self.student_id.student_name,
                                         self.staff_id.staff_name)
 
@@ -109,7 +109,7 @@ class Request(db.Model):
     def adds_to_db(cls, student_slack_name, student_id, text, channel_id):
         """adds a student's request to queue"""
 
-        request = Request(
+        slack_request = Slack_Request(
                             start_time_stamp=datetime.now(),
                             text=text,
                             student_id=student_id,
@@ -117,14 +117,14 @@ class Request(db.Model):
                             channel_id=channel_id,
                         )
 
-        db.session.add(request)
+        db.session.add(slack_request)
         db.session.commit()
 
 
-def update_request(request):
+def update_request(slack_request):
     """updates the request to be """
-    request.end_time_stamp = datetime.now()
-    db.session.add(request)
+    slack_request.end_time_stamp = datetime.now()
+    db.session.add(slack_request)
     db.session.commit()
 
 class Staff(db.Model):

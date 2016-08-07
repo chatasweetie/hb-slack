@@ -9,7 +9,7 @@ def seed_channel(token):
 
     print "seeding channel"
 
-    url = 'https://slack.com/api/team.info?token=xoxp-51287440853-51309131303-66392307985-364959f898&pretty=1'.format(token)
+    url = 'https://slack.com/api/team.info?token={}&pretty=1'.format(token)
 
     response = requests.get(url)
 
@@ -30,7 +30,7 @@ def seed_channel(token):
 def seed_db(token):
     """seeds the database with student, staff and channel information"""
 
-    url = 'https://slack.com/api/users.list?token=xoxp-51287440853-51309131303-66392307985-364959f898&pretty=1'.format(token)
+    url = 'https://slack.com/api/users.list?token={}&pretty=1'.format(token)
 
     response = requests.get(url)
 
