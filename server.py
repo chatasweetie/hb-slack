@@ -88,7 +88,7 @@ def dequeues():
 
     if text:
         if text[0] == "@":
-            slack_request = Slack_Request.query.filter(Slack_Request.student_slack_name==user_name, Slack_Request.end_time_stamp.is_(None)).first()
+            slack_request = Slack_Request.query.filter(Slack_Request.student_slack_name==text[1:], Slack_Request.end_time_stamp.is_(None)).first()
             student_id = slack_request.student_id
             text = slack_request.text
             slack_request.staff_id = user_id
